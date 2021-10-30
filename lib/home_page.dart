@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:islami_fri/hadeth/HadethTab.dart';
 import 'package:islami_fri/quran/quran_tab.dart';
-import 'package:islami_fri/radio/RadioTab.dart';
+import 'package:islami_fri/radio/radio_tab.dart';
 import 'package:islami_fri/sebha/sebha_tab.dart';
 import 'package:islami_fri/theme_provider/my_themes.dart';
 import 'package:provider/provider.dart';
