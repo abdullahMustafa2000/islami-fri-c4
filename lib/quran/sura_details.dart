@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:islami_fri/theme_provider/my_themes.dart';
+import 'package:islami_fri/app_provider/my_themes.dart';
+import 'package:provider/provider.dart';
 
 import '../main.dart';
 
@@ -18,12 +19,13 @@ class _SuraDetailsScreenState extends State<SuraDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<MyAppProvider>(context);
     var args = ModalRoute.of(context)?.settings.arguments as SuraDetailsArgs;
     loadSuraDetails(args.suraIndex);
     return Stack(
       children: [
         Image.asset(
-          initBgImage(context),
+          provider.isDark(context)? 'assets/images/bg_designed_dark.png' : 'assets/images/main_background.png',
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.fill,

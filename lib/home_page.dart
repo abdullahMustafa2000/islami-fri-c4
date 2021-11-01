@@ -1,14 +1,15 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:islami_fri/app_provider/my_themes.dart';
 import 'package:islami_fri/hadeth/HadethTab.dart';
 import 'package:islami_fri/quran/quran_tab.dart';
 import 'package:islami_fri/radio/radio_tab.dart';
 import 'package:islami_fri/sebha/sebha_tab.dart';
-import 'package:islami_fri/theme_provider/my_themes.dart';
-import 'package:provider/provider.dart';
 
-import 'main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:islami_fri/settings/settings_tab.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = 'home';
@@ -26,11 +27,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<MyAppProvider>(context);
+    var appLocalization = AppLocalizations.of(context)!;
     return SafeArea(
       child: Stack(
         children: [
           Image.asset(
-            initBgImage(context),
+            provider.isDark(context)? 'assets/images/bg_designed_dark.png' : 'assets/images/main_background.png',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.fill,
@@ -39,8 +42,8 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               elevation: 0,
               centerTitle: true,
-              title: const Text(
-                'اسلامي',
+              title: Text(
+                appLocalization.app_title,
               ),
               backgroundColor: Colors.transparent,
             ),
@@ -55,43 +58,44 @@ class _HomePageState extends State<HomePage> {
                 currentIndex: currentPage,
                 items: [
                   BottomNavigationBarItem(
-                      label: 'Quran',
+                      label: appLocalization.quran_tab,
                       icon: Image.asset(
                         'assets/images/ic_moshaf.png',
                         width: 36,
                         color: changeIconColor(0),
                       )),
                   BottomNavigationBarItem(
-                      label: 'ahadeth',
+                      label: appLocalization.hadeeth_tab,
                       icon: Image.asset('assets/images/ic_book.png', width: 36,
                         color: changeIconColor(1),)),
                   BottomNavigationBarItem(
-                      label: 'sebha',
+                      label: appLocalization.sebha_tab,
                       icon: Image.asset('assets/images/ic_sebha.png', width: 36,
                         color: changeIconColor(2),)),
                   BottomNavigationBarItem(
-                      label: 'radio',
+                      label: appLocalization.radio_tab,
                       icon: Image.asset('assets/images/ic_radio.png', width: 36,
+                        color: changeIconColor(3),)),
+                  BottomNavigationBarItem(
+                      label: appLocalization.settings_tab,
+                      icon: Icon(Icons.settings, size: 36,
                         color: changeIconColor(3),)),
                 ],
               ),
             ),
-            body: Container(child: getCurrentPage()),
+            body: Container(child: view[currentPage]),
           ),
         ],
       ),
     );
   }
 
-  Widget getCurrentPage() {
-    if (currentPage == 0) {
-      return QuranTab();
-    } else if (currentPage == 1) {
-      return HadethTab();
-    } else if (currentPage == 2) {
-      return SebhaTab();
-    } else {
-      return RadioTab();
-    }
-  }
+  List<Widget> view = [
+    QuranTab(),
+    HadethTab(),
+    SebhaTab(),
+    RadioTab(),
+    SettingsTab(),
+  ];
+
 }

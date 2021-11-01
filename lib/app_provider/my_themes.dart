@@ -1,14 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:islami_fri/storage_preference/preference_class.dart';
 
-class MyThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.system;
+class MyAppProvider extends ChangeNotifier {
+  ThemeMode _themeMode = ThemeMode.dark;
+
+
+  ThemeMode get themeMode => _themeMode;
+
+  set themeMode(ThemeMode value) {
+    _themeMode = value;
+  }
+
+  MyAppProvider() {
+    StorageManager.readData('themeMode').then((value) {
+      var darkMode = value ?? true;
+      if (darkMode) {
+        themeMode = ThemeMode.dark;
+      } else {
+        themeMode = ThemeMode.light;
+      }
+      notifyListeners();
+    }
+    );
+  }
 
   bool isDark(BuildContext context) =>
-      themeMode == ThemeMode.dark ||
-      MediaQuery.of(context).platformBrightness == Brightness.dark;
+      themeMode == ThemeMode.dark/* ||
+      MediaQuery.of(context).platformBrightness == Brightness.dark*/;
 
   void toggleTheme(bool dark) {
+    if(dark == (themeMode == ThemeMode.dark)) {
+      return;
+    }
     themeMode = dark ? ThemeMode.dark : ThemeMode.light;
+    StorageManager.saveData('themeMode', dark);
     notifyListeners();
   }
 }
@@ -42,8 +67,11 @@ class MyTheme {
         primary: MyLightColors.primaryColor,
         secondaryVariant: MyLightColors.white),
     appBarTheme: const AppBarTheme(
+      titleTextStyle: TextStyle(
+        color: MyLightColors.colorBlack
+      ),
       iconTheme: IconThemeData(
-        color: MyDarkColors.selectedIconColor,
+        color: MyLightColors.colorBlack,
       ), // set backbutton color here which will reflect in all screens.
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
