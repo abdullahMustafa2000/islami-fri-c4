@@ -1,9 +1,41 @@
 // ignore_for_file: use_key_in_widget_constructors, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:islami_fri/api_service/api_service.dart';
+import 'package:islami_fri/modules/radio_module.dart';
 
-class RadioTab extends StatelessWidget {
-  String channelName = 'اذاعة القران الكريم';
+class RadioTab extends StatefulWidget {
+  @override
+  State<RadioTab> createState() => _RadioTabState();
+}
+
+class _RadioTabState extends State<RadioTab> {
+  var channelIndex = 0;
+
+  APIService get apiService => GetIt.I<APIService>();
+  String channelName = '';
+  bool _isLoading = false;
+  List<RadioModule> channelsList = [];
+
+  fetchChannels() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    channelsList = await apiService.getRadioChannels();
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    fetchChannels();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +48,7 @@ class RadioTab extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                channelName,
+                channelsList.isEmpty? 'channels' : channelsList[channelIndex].Name,
                 style: const TextStyle(fontSize: 24),
               ),
             ),
@@ -38,7 +70,11 @@ class RadioTab extends StatelessWidget {
   }
 
   onPrevClick() {
-    print('onPrevClick');
+    channelIndex = channelIndex == 0? channelsList.length -1: --channelIndex;
+    channelName = channelsList[channelIndex].Name;
+    setState(() {
+
+    });
   }
 
   onPlayPauseClick() {
@@ -46,7 +82,11 @@ class RadioTab extends StatelessWidget {
   }
 
   onNextClick() {
-    print('onNextClick');
+    channelIndex = channelIndex == channelsList.length -1? 0: ++channelIndex;
+    channelName = channelsList[channelIndex].Name;
+    setState(() {
+
+    });
   }
 }
 

@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get_it/get_it.dart';
+import 'package:islami_fri/api_service/api_service.dart';
 import 'package:islami_fri/app_provider/my_themes.dart';
 import 'package:islami_fri/home_page.dart';
 import 'package:islami_fri/quran/sura_details.dart';
@@ -9,7 +11,12 @@ import 'package:islami_fri/quran/sura_details.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+void createServiceLocator() {
+  GetIt.I.registerLazySingleton(() => APIService());
+}
+
 void main() {
+  createServiceLocator();
   runApp(MyApp());
 }
 
